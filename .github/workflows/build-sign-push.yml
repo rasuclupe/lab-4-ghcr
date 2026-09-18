@@ -1,0 +1,48 @@
+# =============================================================================
+# STARTER — Lab 1 del Módulo 4 (INCOMPLETO a propósito)
+# =============================================================================
+# Completa los TODO para lograr: build multi-arch → push a GHCR → firma keyless.
+# La solución de referencia está en SOLUCION/.github/workflows/build-sign-push.yml
+# =============================================================================
+name: Build Sign Push (starter)
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+# TODO (Fase 3): añade los permisos necesarios.
+#   - packages: write  (push a GHCR)
+#   - id-token: write  (firma keyless)
+permissions:
+  contents: read
+
+env:
+  IMAGE: ghcr.io/${{ github.repository }}
+
+jobs:
+  build-sign-push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # TODO (Fase 2): setup-qemu-action y setup-buildx-action para multi-arch
+
+      - name: Login a GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build y push
+        id: build
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          # TODO (Fase 2): platforms multi-arch + caché type=gha
+          push: true
+          tags: ${{ env.IMAGE }}:${{ github.sha }}
+
+      # TODO (Fase 3): instalar Cosign, firmar el DIGEST (no el tag) y verificar
+      # Pista: usa steps.build.outputs.digest y cosign sign --yes IMAGE@DIGEST

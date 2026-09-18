@@ -1,0 +1,6 @@
+apiVersion: v2
+name: app-contenedores-m4
+description: Chart de la app de ejemplo del Módulo 4
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
