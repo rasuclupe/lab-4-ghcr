@@ -12,7 +12,8 @@ FROM node:20-alpine AS deps
 WORKDIR /app
 COPY package.json package-lock.json ./
 # --omit=dev evita dependencias de desarrollo en la imagen final
-RUN npm ci --omit=dev || npm install --omit=dev
+#RUN npm ci --omit=dev || npm install --omit=dev
+RUN (npm ci --omit=dev || npm install --omit=dev) && mkdir -p node_modules
 
 # ---- Etapa runtime ----------------------------------------------------------
 FROM node:20-alpine AS runtime
